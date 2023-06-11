@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cybersecurity Quiz</title>
+</head>
+<body>
+    <h1>Cybersecurity Quiz: Test Your Knowledge!</h1>
+    <div id="quiz-container">
+        <h3 id="question"></h3>
+        <form id="quiz-form">
+            <ol id="options"></ol>
+            <button id="next-button" style="display: none;">Next</button>
+        </form>
+        <div id="result" style="display: none;"></div>
+        <button id="retake-button" style="display: none;">Retake Quiz</button>
+    </div>
+    
+    <script>
+        var questions = [
+            {
+                question: "What is a strong password?",
+                options: [
+                    "A password that includes your name and birthdate.",
+                    "A password that is at least eight characters long and includes a combination of uppercase and lowercase letters, numbers, and symbols.",
+                    "A password that is easy to remember, like '123456'."
+                ],
+                answer: "b"
+            },
+            {
+                question: "What is phishing?",
+                options: [
+                    "A technique used by cybercriminals to trick people into revealing personal information.",
+                    "A type of online game.",
+                    "A social media platform."
+                ],
+                answer: "a"
+            },
+            {
+                question: "What should you do before sharing personal information online?",
+                options: [
+                    "Nothing, it's safe to share personal information online.",
+                    "Think twice and avoid sharing sensitive details on public platforms.",
+                    "Share personal information only with friends on social media."
+                ],
+                answer: "b"
+            },
+            {
+                question: "Why is it important to keep your software updated?",
+                options: [
+                    "Software updates make your device run faster.",
+                    "Software updates fix security vulnerabilities and protect against cyber threats.",
+                    "Software updates are not necessary."
+                ],
+                answer: "b"
+            },
+            {
+                question: "How can you protect yourself from malware?",
+                options: [
+                    "Avoid downloading any files or software.",
+                    "Only download files from trusted sources and install an antivirus program.",
+                    "Use public Wi-Fi networks for downloading files."
+                ],
+                answer: "b"
+            },
+            {
+                question: "How can you secure your home Wi-Fi network?",
+                options: [
+                    "Leave it open for everyone to use.",
+                    "Set a strong password and use encryption protocols like WPA2 or WPA3.",
+                    "Disable the Wi-Fi network when not in use."
+                ],
+                answer: "b"
+            },
+            {
+                question: "What should you consider when adjusting social media privacy settings?",
+                options: [
+                    "Keep all your profiles public for maximum visibility.",
+                    "Limit your profiles to trusted friends and family and review privacy settings regularly.",
+                    "Accept friend requests from strangers to expand your network."
+                ],
+                answer: "b"
+            },
+            {
+                question: "What should you do if you receive a suspicious online request?",
+                options: [
+                    "Share your personal information or financial details immediately.",
+                    "Trust the request and follow the instructions.",
+                    "Be skeptical, avoid sharing personal information, and seek help from a trusted adult."
+                ],
+                answer: "c"
+            },
+            {
+                question: "What are safe browsing habits?",
+                options: [
+                    "Visit suspicious websites and click on unknown links.",
+                    "Stick to trusted websites and use secure browsing protocols like HTTPS.",
+                    "Avoid using the internet altogether."
+                ],
+                answer: "b"
+            },
+            {
+                question: "Who should you seek help from if you encounter cyberbullying?",
+                options: [
+                    "Keep it to yourself and don't involve anyone.",
+                    "Tell your friends about it.",
+                    "Report the incident to a trusted adult or authority figure."
+                ],
+                answer: "c"
+            }
+        ];
+        
+        var currentQuestion = 0;
+        var score = 0;
+        var quizFinished = false;
+        
+        function displayQuestion() {
+            var questionElement = document.getElementById('question');
+            var optionsElement = document.getElementById('options');
+            
+            questionElement.textContent = questions[currentQuestion].question;
+            optionsElement.innerHTML = '';
+            
+            for (var i = 0; i < questions[currentQuestion].options.length; i++) {
+                var option = document.createElement('li');
+                var radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'q';
+                radio.value = String.fromCharCode(97 + i);
+                
+                option.appendChild(radio);
+                option.appendChild(document.createTextNode(questions[currentQuestion].options[i]));
+                optionsElement.appendChild(option);
+            }
+            
+            if (currentQuestion === questions.length - 1) {
+                document.getElementById('next-button').style.display = 'none';
+                document.getElementById('quiz-form').removeAttribute('onsubmit');
+                document.getElementById('quiz-form').addEventListener('submit', showFinalResult);
+                document.getElementById('retake-button').style.display = 'block';
+            } else {
+                document.getElementById('next-button').style.display = 'block';
+                document.getElementById('quiz-form').setAttribute('onsubmit', 'return false;');
+                document.getElementById('quiz-form').addEventListener('submit', validateAnswer);
+                document.getElementById('retake-button').style.display = 'none';
+            }
+        }
+        
+        function validateAnswer() {
+            var selectedOption = document.querySelector('input[name=q]:checked');
+            
+            if (selectedOption !== null) {
+                if (selectedOption.value === questions[currentQuestion].answer) {
+                    score++;
+                }
+                
+                currentQuestion++;
+                displayQuestion();
+            }
+            
+            return false;
+        }
+        
+        function showFinalResult() {
+            var result = document.getElementById('result');
+            result.innerHTML = '<h2>Your score: ' + score + ' out of ' + questions.length + '</h2>';
+            result.style.display = 'block';
+            quizFinished = true;
+            document.getElementById('next-button').style.display = 'none';
+        }
+        
+        function retakeQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            displayQuestion();
+            document.getElementById('result').style.display = 'none';
+            quizFinished = false;
+        }
+        
+        document.getElementById('next-button').addEventListener('click', validateAnswer);
+        document.getElementById('retake-button').addEventListener('click', retakeQuiz);
+        
+        displayQuestion();
+    </script>
+</body>
+</html>
